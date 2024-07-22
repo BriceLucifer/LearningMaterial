@@ -3,7 +3,7 @@ from typing import Optional
 class Node:
     def __init__(self, val:int):
         self.val = val
-        self.next = None
+        self.next : Optional[Node] = None
         
     def insert(self, val:int):
         # 头部插入
