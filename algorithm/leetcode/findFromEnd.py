@@ -31,3 +31,5 @@ class Solution:
         # p1 和 p2 相差k步 那么我p1 走 3 4 5 也就是 5-2 = 3步 (n-k)步
         # 1 2 3 p2 5 p1(None)
         # 所以倒过来 n-k+1 就是倒数第k个节点
+        
+        return p2
