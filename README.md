@@ -20,3 +20,4 @@ ssh-add --apple-use-keychain ~/.ssh/文件名
 # 克隆仓库 然后在你的仓库配置名字和email不要添加--global
 git config user.name "你的github昵称"
 git config user.email "xxx邮箱"
+z
