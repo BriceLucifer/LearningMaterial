@@ -1,6 +1,5 @@
 use std::{
-    io::{BufRead, BufReader, Write}, 
-    net::{TcpListener, TcpStream}
+    fs, io::{BufRead, BufReader, Write}, net::{TcpListener, TcpStream}
 };
 
 fn main(){
@@ -24,23 +23,66 @@ fn handle_connection(mut stream:TcpStream){
     
     // 缓存区
     let bufreader = BufReader::new(&mut stream);
+    // request_line
+    let request_line = bufreader.lines().next().unwrap().unwrap();
+
+    let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
+        ("HTTP/1.1 200 OK", "hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+
+    // if request_line == "GET / HTTP/1.1"{
+    //     let status_line = "HTTP/1.1 200 OK\r\n\r\n";
+    //     let contents = fs::read_to_string("hello.html").unwrap();
+    //     let length = contents.len();
+
+    //     let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+    //     stream.write_all(response.as_bytes()).unwrap();
+    // }else {
+    //     let status_line = "HTTP/1.1 404 NOT FOUND";
+    //     let contents = fs::read_to_string("404.html").unwrap();
+    //     let length = contents.len();
+
+    //     let response = format!(
+    //         "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+    //     );
+
+    //     stream.write_all(response.as_bytes()).unwrap();
+    // }
+
     // 请求信息 
-    let _http_request:Vec<_> = bufreader
-                .lines()
-                .map(|x|{
-                    if let Ok(buffer) = x {
-                        return buffer;
-                    }else {
-                        eprintln!("error bufreader");
-                        return String::new();
-                    }
-                })
-                .take_while(|line| !line.is_empty())
-                .collect();
+    // let _http_request:Vec<_> = bufreader
+    //             .lines()
+    //             .map(|x|{
+    //                 if let Ok(buffer) = x {
+    //                     return buffer;
+    //                 }else {
+    //                     eprintln!("error bufreader");
+    //                     return String::new();
+    //                 }
+    //             })
+    //             .take_while(|line| !line.is_empty())
+    //             .collect();
 
     //println!("Request: {:#?}",http_request);
-    let response = "HTTP/1.1 200 OK\r\n\r\n";
+    // let status_line = "HTTP/1.1 200 OK\r\n\r\n";
     // write a website
-                
+    // let contents = fs::read_to_string("hello.html");
+    // if let Ok(content) = contents {
+        // let length = content.len();
+        // let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{content}");
+        // stream.write_all(response.as_bytes()).unwrap();
+    //}else {
+    //     eprintln!("error read_to_string")
+    // }
     //stream.write_all(response.as_bytes()).unwrap();
 }
