@@ -90,3 +90,5 @@ const port = 3000;
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
+const [hello,world]= [1,2];
+console.log(hello,world)

@@ -1,13 +1,14 @@
 use std::{
-    io::{BufRead, BufReader, Write}, 
-    net::{TcpListener, TcpStream}
+    io::Write, 
+    net::{TcpListener, TcpStream},
+    fs
 };
 
 fn main(){
     let listener = TcpListener::bind("127.0.0.1:7878");
-    if let Ok(Listen) = listener {
+    if let Ok(listen) = listener {
         // 处理stream
-        for stream in Listen.incoming(){
+        for stream in listen.incoming(){
             if let Ok(success) = stream {
                 println!("Connect successfully");
                 handle_connection(success);
@@ -20,27 +21,25 @@ fn main(){
     }
 }
 
-fn handle_connection(mut stream:TcpStream){
-    
-    // 缓存区
-    let bufreader = BufReader::new(&mut stream);
-    // 请求信息 
-    let _http_request:Vec<_> = bufreader
-                .lines()
-                .map(|x|{
-                    if let Ok(buffer) = x {
-                        return buffer;
-                    }else {
-                        eprintln!("error bufreader");
-                        return String::new();
-                    }
-                })
-                .take_while(|line| !line.is_empty())
-                .collect();
+fn handle_connection(mut stream: TcpStream) {
+    let buffer = [0; 1024];
+    let get = b"GET / HTTP/1.1\r\n";
 
-    //println!("Request: {:#?}",http_request);
-    let response = "HTTP/1.1 200 OK\r\n\r\n";
-    // write a website
-                
-    //stream.write_all(response.as_bytes()).unwrap();
+    let (status_line, filename) = if buffer.starts_with(get) {
+        ("HTTP/1.1 200 OK", "./hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "./404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+
+    let response = format!(
+        "{}\r\nContent-Length: {}\r\n\r\n{}",
+        status_line,
+        contents.len(),
+        contents
+    );
+
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
 }

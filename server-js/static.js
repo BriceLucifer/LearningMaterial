@@ -1,4 +1,4 @@
-class Liuyunxiang{
+class aaa{
     static age=100000;
     static logt(){
         return  "love❤";
@@ -8,10 +8,10 @@ class Liuyunxiang{
         return ++this.year;
     }
 }
-console.log(Liuyunxiang.age);
-console.log(Liuyunxiang.logt());
+console.log(aaa.age);
+console.log(aaa.logt());
 
-const a = new Liuyunxiang();
+const a = new aaa();
 console.log(a.year);
 console.log(a.yearprint());
-console.log(Liuyunxiang.year);
+console.log(aaa.year);
