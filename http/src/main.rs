@@ -1,3 +1,4 @@
+#![warn(unused_variables)]
 fn main(){
     let ipstr = String::new();
     let args = std::env::args();
