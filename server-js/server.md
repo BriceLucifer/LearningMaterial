@@ -27,7 +27,7 @@ function getUserById(data) {
 ```
 function handleRequest(req, res) {
     // 用于将 URL 字符串解析成一个对象
-    const parsedUrl = url.parse(rea.url, true);
+    const parsedUrl = url.parse(req.url, true);
     // 从解析后的 URL 对象中提取出路径名部分
     const pathname = parsedUrl.pathname;
     // 获取 HTTP 请求的方法
