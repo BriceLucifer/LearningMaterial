@@ -1,12 +1,18 @@
 use std::{
+<<<<<<< HEAD
     fs, io::{BufRead, BufReader, Write}, net::{TcpListener, TcpStream}
+=======
+    io::Write, 
+    net::{TcpListener, TcpStream},
+    fs
+>>>>>>> refs/remotes/origin/main
 };
 
 fn main(){
     let listener = TcpListener::bind("127.0.0.1:7878");
-    if let Ok(Listen) = listener {
+    if let Ok(listen) = listener {
         // 处理stream
-        for stream in Listen.incoming(){
+        for stream in listen.incoming(){
             if let Ok(success) = stream {
                 println!("Connect successfully");
                 handle_connection(success);
@@ -19,6 +25,7 @@ fn main(){
     }
 }
 
+<<<<<<< HEAD
 fn handle_connection(mut stream:TcpStream){
     
     // 缓存区
@@ -89,3 +96,27 @@ fn handle_connection(mut stream:TcpStream){
     // }
     //stream.write_all(response.as_bytes()).unwrap();
 }
+=======
+fn handle_connection(mut stream: TcpStream) {
+    let buffer = [0; 1024];
+    let get = b"GET / HTTP/1.1\r\n";
+
+    let (status_line, filename) = if buffer.starts_with(get) {
+        ("HTTP/1.1 200 OK", "./hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "./404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+
+    let response = format!(
+        "{}\r\nContent-Length: {}\r\n\r\n{}",
+        status_line,
+        contents.len(),
+        contents
+    );
+
+    stream.write(response.as_bytes()).unwrap();
+    stream.flush().unwrap();
+}
+>>>>>>> refs/remotes/origin/main

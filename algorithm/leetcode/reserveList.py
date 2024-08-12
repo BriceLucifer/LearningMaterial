@@ -8,7 +8,7 @@ class ListNode:
 class Solution:
     def reserveList(self,head:Optional[ListNode])->Optional[ListNode] :
         if not head or not head.next:
-            return None
+            return head
 
         newhead = self.reserveList(head.next)
         head.next.next = head
